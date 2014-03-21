@@ -32,12 +32,20 @@
  (minify-js "var hmm = (function () { var yoyoyo = 2; return yoyoyo; }());" {:mangle-js-names false})
  => "var hmm=function(){var yoyoyo=2;return yoyoyo}();")
 
+;; (fact
+;;  "To save some time minifying a lot of files, we can create the
+;;   uglify.JS context up front, and then reuse that for all the assets."
+;;  (let [cx (create-uglify-context)]
+;;    (minify-js cx "var hello = 2 + 3;" {}) => "var hello=5;"
+;;    (minify-js cx "var hello = 3 + 4;" {}) => "var hello=7;"))
+
 (fact
  "To save some time minifying a lot of files, we can create the
   uglify.JS context up front, and then reuse that for all the assets."
- (let [cx (create-uglify-context)]
-   (minify-js cx "var hello = 2 + 3;" {}) => "var hello=5;"
-   (minify-js cx "var hello = 3 + 4;" {}) => "var hello=7;"))
+ (let [engine (prepare-uglify-engine)]
+   (minify-js engine "var hello = 2 + 3;" {}) => "var hello=5;"
+   (minify-js engine "var hello = 3 + 4;" {}) => "var hello=7;"))
+
 
 (fact
  "It minifies a list of JS assets."

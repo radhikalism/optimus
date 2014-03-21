@@ -46,6 +46,11 @@ You might also be interested in:
 - [optimus-img-transform](http://github.com/magnars/optimus-img-transform) - an
   asset middleware to transform your images' size, quality and rendering methods.
 
+Optimus relies on a JS engine to execute transformers such as CSSO or
+UglifyJS. JS engines are made available as services to Optimus via the
+JSR-223 `javax.script.*` API and selected using an environmental
+setting. See "Choosing a JS engine" below.
+
 ## Usage
 
 Let's look at an example:
@@ -574,6 +579,26 @@ It's about
 [20 lines of code](https://github.com/magnars/optimus-less/blob/master/src/optimus_less/core.clj),
 including requires. And adding support for more transpilers require no
 changes to Optimus itself.
+
+## Choosing a JS engine
+
+Optimus can use any JS engine with a JSR-223-compliant
+API. Realistically, the three most likely options are V8 (via clj-v8),
+Nashorn (JDK8+), or Rhino.
+
+By default, Optimus tries to discover engines in that order.
+
+The preference list for Optimus' JS engines can be overridden using an
+[environ variable](https://github.com/weavejester/environ). That means
+it can be provided in any of these ways:
+
+- A comma-separated shell environment variable `OPTIMUS_JS_ENGINES`.
+  e.g. `OPTIMUS_JS_ENGINES=v8,nashorn,rhino`
+- A comma-separated Java system property `optimus_js_engines`.
+  e.g. `JAVA_OPTS=-Doptimus_js_engines=v8,nashorn,rhino`
+- A list in your `project.clj`, in `{:env {:optimus-js-engines}}`.
+  e.g. `{:env {:optimus-js-engines ["v8", "nashorn", "rhino"]}}`
+
 
 ## Change log
 
